@@ -23,7 +23,7 @@ async()
 	// Sanity checks {{{
 	.then(function(next) {
 		if (program.args.length != 1) return next('RevMan-Replicant needs exactly one RevMan file to work with');
-		if (!program.tree && !program.replicant) return next('Specify at least --tree or --replicant');
+		if (!program.tree && !program.replicant && !program.verify) return next('Specify at least --tree or --replicant');
 		next();
 	})
 	// }}}
@@ -33,6 +33,13 @@ async()
 	})
 	.then('revman', function(next) {
 		revman.parse(this.buffer.toString(), next);
+	})
+	// }}}
+	// If program.verify {{{
+	.then(function(next) {
+		// If we got to here then we know the file is valid
+		if (program.verify && program.verbose) console.log('RevMan file is valid');
+		next();
 	})
 	// }}}
 	// If program.tree {{{
