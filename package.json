@@ -1,6 +1,6 @@
 {
   "name": "revman-cli",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "CLI program to query RevMan files",
   "main": "app.js",
   "bin": {

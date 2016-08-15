@@ -9,7 +9,9 @@ var util = require('util');
 
 program
 	.version(require('./package.json').version)
-	.usage('<file> [--tree | --replicant] [options]')
+	.usage('<file> [--tree | --replicant | --json] [options]')
+	.option('-j, --json', 'Output RevMan JSON structure')
+	.option('-p, --pretty', 'When using --json, pretty print the structure')
 	.option('-r, --replicant', 'Generate an abstract from the RevMan file via RevMan-Replicant')
 	.option('--grammar [file]', 'Use the specified grammar file to generate --replicant output', __dirname + '/node_modules/revman-replicant/grammars/hal-en.html')
 	.option('-t, --tree', 'Output a tree of all comparisons, outcomes, subgroups and studies')
@@ -23,7 +25,7 @@ async()
 	// Sanity checks {{{
 	.then(function(next) {
 		if (program.args.length != 1) return next('RevMan-Replicant needs exactly one RevMan file to work with');
-		if (!program.tree && !program.replicant && !program.verify) return next('Specify at least --tree or --replicant');
+		if (!program.tree && !program.replicant && !program.json && !program.verify) return next('Specify at least --tree, --replicant or --json');
 		next();
 	})
 	// }}}
@@ -83,6 +85,16 @@ async()
 			console.log(text);
 			next();
 		});
+	})
+	// }}}
+	// If program.json {{{
+	.then(function(next) {
+		if (!program.json) return next();
+		if (program.pretty) {
+			process.stdout.write(util.inspect(this.revman, {depth: null, colors: true}), next);
+		} else {
+			process.stdout.write(JSON.stringify(this.revman, null, '\t'), next);
+		}
 	})
 	// }}}
 	// End {{{

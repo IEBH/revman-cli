@@ -2,7 +2,11 @@ RevMan-CLI
 ==========
 CLI program to query RevMan files.
 
-This CLI can also generate [RevMan-Replicant](https://github.com/CREBP/revman-replicant) output.
+**Features**:
+
+* Can output the raw JSON structure (via `--json`, to pretty print also add `--pretty`)
+* Generate [RevMan-Replicant](https://github.com/CREBP/revman-replicant) output (via `--replicant`)
+* Can output the raw `comparison / [subgroups] / outcomes` tree (via `-tree`, to output optional studies add `--show-studies`)
 
 
 Installation
