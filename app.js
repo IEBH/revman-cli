@@ -46,12 +46,12 @@ async()
 	.then(function(next) {
 		// If we got to here then we know the file is valid
 		if (this.warnings.length) {
-			console.log(program.args[0], '- RevMan file is valid (' + this.warnings.length + ' warnings):');
+			console.log(program.args[0], '-', colors.green('RevMan file is valid'), '(' + colors.red(this.warnings.length + ' warnings') +'):');
 			this.warnings.forEach(function(warning) {
 				console.log('\t-', warning);
 			});
 		} else if (program.verify || program.verbose) {
-			console.log(program.args[0], '- RevMan file is valid');
+			console.log(program.args[0], '-', colors.green('RevMan file is valid'));
 		}
 		next();
 	})
