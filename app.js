@@ -1,4 +1,5 @@
 #!/usr/bin/node
+var _ = require('lodash');
 var async = require('async-chainable');
 var colors = require('chalk');
 var fs = require('fs');
@@ -64,20 +65,22 @@ async()
 
 		task.revman.analysesAndData.comparison.forEach(function(comparison, comparisonIndex) {
 			console.log(colors.bold.blue('*', comparison.name));
-			comparison.outcome.forEach(function(outcome) {
-				console.log('  -', outcome.name, colors.grey(outcome.study ? '(' + outcome.study.length + ' studies)' : ''));
+			comparison.outcome.forEach(function(outcome, outcomeIndex) {
+				var prefix = (comparisonIndex+1) + '.' + _.padStart(outcomeIndex+1, 2, '0');
+				console.log('  -', colors.grey(prefix), outcome.name, colors.grey(outcome.study ? '(' + outcome.study.length + ' studies)' : ''));
 				if (outcome.subgroup) {
 					outcome.subgroup.forEach(function(subgroup) {
-						console.log('    -', subgroup.name, colors.grey('(subgroup; ' + subgroup.study.length + ' studies)'));
+						var subgroupPrefix = prefix + '.' + _.padStart(subgroup.no, 2, '0');
+						console.log('    -', colors.grey(subgroupPrefix), subgroup.name, colors.grey('(subgroup; ' + subgroup.study.length + ' studies)'));
 						if (program.showStudies) {
-							subgroup.study.forEach(function(study) {
-								console.log('      -', study.name);
+							subgroup.study.forEach(function(study, studyIndex) {
+								console.log('      -', colors.grey(subgroupPrefix + '.' + _.padStart(studyIndex+1, 2, '0')), study.studyId);
 							});
 						}
 					});
 				} else if (program.showStudies) {
-					outcome.study.forEach(function(study) {
-						console.log('    -', study.name);
+					outcome.study.forEach(function(study, studyIndex) {
+						console.log('    -', colors.grey(prefix + '.' + _.padStart(studyIndex+1, 2, '0')), study.studyId);
 					});
 				}
 			});
