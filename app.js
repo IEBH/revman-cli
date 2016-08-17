@@ -49,7 +49,7 @@ async()
 	// If program.verify + output warnings {{{
 	.then(function(next) {
 		// If we got to here then we know the file is valid
-		if (this.warnings.length) {
+		if ((program.verify || program.verbose) && this.warnings.length) {
 			console.log(program.args[0], '-', colors.green('RevMan file is valid'), '(' + colors.red(this.warnings.length + ' warnings') +'):');
 			this.warnings.forEach(function(warning) {
 				console.log('\t-', warning);
