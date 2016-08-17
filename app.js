@@ -37,7 +37,10 @@ async()
 	.set('warnings', [])
 	.then('revman', function(next) {
 		var task = this;
-		revman.parse(this.buffer.toString(), function(err, res, warnings) {
+		revman.parse(this.buffer.toString(), {
+			debugOutcomes: (program.verbose || program.verify), // Switch on file scanning when being verbose or verifying
+			removeEmptyOutcomes: false,
+		}, function(err, res, warnings) {
 			task.warnings = warnings;
 			next(err, res);
 		});
@@ -72,13 +75,13 @@ async()
 					outcome.subgroup.forEach(function(subgroup) {
 						var subgroupPrefix = prefix + '.' + _.padStart(subgroup.no, 2, '0');
 						console.log('    -', colors.grey(subgroupPrefix), subgroup.name, colors.grey('(subgroup; ' + subgroup.study.length + ' studies)'));
-						if (program.showStudies) {
+						if (program.showStudies && subgroup.study) {
 							subgroup.study.forEach(function(study, studyIndex) {
 								console.log('      -', colors.grey(subgroupPrefix + '.' + _.padStart(studyIndex+1, 2, '0')), study.studyId);
 							});
 						}
 					});
-				} else if (program.showStudies) {
+				} else if (program.showStudies && outcome.study) {
 					outcome.study.forEach(function(study, studyIndex) {
 						console.log('    -', colors.grey(prefix + '.' + _.padStart(studyIndex+1, 2, '0')), study.studyId);
 					});
