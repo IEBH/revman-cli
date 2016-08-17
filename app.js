@@ -33,14 +33,26 @@ async()
 	.then('buffer', function(next) {
 		fs.readFile(program.args[0], 'utf-8', next);
 	})
+	.set('warnings', [])
 	.then('revman', function(next) {
-		revman.parse(this.buffer.toString(), next);
+		var task = this;
+		revman.parse(this.buffer.toString(), function(err, res, warnings) {
+			task.warnings = warnings;
+			next(err, res);
+		});
 	})
 	// }}}
-	// If program.verify {{{
+	// If program.verify + output warnings {{{
 	.then(function(next) {
 		// If we got to here then we know the file is valid
-		if (program.verify && program.verbose) console.log('RevMan file is valid');
+		if (this.warnings.length) {
+			console.log(program.args[0], '- RevMan file is valid (' + this.warnings.length + ' warnings):');
+			this.warnings.forEach(function(warning) {
+				console.log('\t-', warning);
+			});
+		} else if (program.verify || program.verbose) {
+			console.log(program.args[0], '- RevMan file is valid');
+		}
 		next();
 	})
 	// }}}

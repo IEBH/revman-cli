@@ -26,6 +26,6 @@
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "revman": "^1.3.1",
-    "revman-replicant": "0.0.4"
+    "revman-replicant": "0.0.6"
   }
 }
